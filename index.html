@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BEM</title>
+    <link rel="stylesheet" href="./style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+  <body>
+    <div id="toast"></div>
+    <div>
+      <div class="btn btn--success">Show success toast</div>
+      <div class="btn btn--info">Show info toast</div>
+      <div class="btn btn--warning">Show warning toast</div>
+      <div class="btn btn--error">Show error toast</div>
+    </div>
+
+    <script>
+      const $ = document.querySelector.bind(document);
+      const $$ = document.querySelectorAll.bind(document);
+
+      const btnSuccess = $(".btn--success");
+      const btnInfo = $(".btn--info");
+      const btnWarning = $(".btn--warning");
+      const btnError = $(".btn--error");
+
+      const ANIMATION_DELAY = 1000;
+
+      const icons = {
+        success: "fas fa-check-circle",
+        info: "fas fa-info-circle",
+        warning: "fas fa-exclamation-circle",
+        error: "fas fa-exclamation-circle",
+      };
+      function toast({ title, message, type, duration }) {
+        const main = $("#toast");
+        if (main) {
+          const icon = icons[type];
+
+          const delay = (duration / 1000).toFixed(2);
+
+          const toast = document.createElement("div");
+
+          const autoRemoveID = setTimeout(() => {
+            main.removeChild(toast);
+          }, duration + ANIMATION_DELAY);
+
+          toast.onclick = function (e) {
+            if (e.target.closest(".toast__close")) {
+              main.removeChild(toast);
+              clearTimeout(autoRemoveID);
+            }
+          };
+
+          toast.classList.add("toast", `toast--${type}`);
+          toast.style.animation = `slideInLeft ease 0.3s, fadeOut linear 1s ${delay}s forwards`;
+          toast.innerHTML = `
+            <div class="toast__icon"><i class="${icon}"></i></div>
+            <div class="toast__body">
+            <h3 class="toast__title">${title}</h3>
+            <p class="toast__message">${message}</p>
+            </div>
+            <div class="toast__close">
+            <i class="fa-solid fa-circle-xmark"></i>
+            </div>
+          `;
+          main.appendChild(toast);
+        }
+      }
+
+      btnSuccess.onclick = function () {
+        toast({
+          title: "Success",
+          message: "Các bạn subscribe kênh Youtube",
+          type: "success",
+          duration: 1000,
+        });
+      };
+
+      btnInfo.onclick = function () {
+        toast({
+          title: "Info",
+          message: "Các bạn subscribe kênh Youtube",
+          type: "info",
+          duration: 10000,
+        });
+      };
+
+      btnWarning.onclick = function () {
+        toast({
+          title: "warning",
+          message: "Các bạn subscribe kênh Youtube",
+          type: "warning",
+          duration: 3000,
+        });
+      };
+
+      btnError.onclick = function () {
+        toast({
+          title: "Error",
+          message: "Các bạn subscribe kênh Youtube",
+          type: "error",
+          duration: 3000,
+        });
+      };
+    </script>
+  </body>
+</html>
